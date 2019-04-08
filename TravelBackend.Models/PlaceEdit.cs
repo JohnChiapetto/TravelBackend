@@ -1,12 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace TravelBackend.Models
 {
-    class PlaceEdit
+    public class PlaceEdit
     {
+        [Key]
+        public Guid PlaceId { get; set; }
+
+        [Required]
+        public string PlaceName { get; set; }
+
+        [Required]
+        public string PlaceLocation { get; set; }
+
+        [Required]
+        public string PlaceDescription { get; set; }
+
+        public string PlaceImageUrl { get; set; } = null;
     }
 }
