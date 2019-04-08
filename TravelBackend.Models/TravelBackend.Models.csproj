@@ -54,6 +54,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="PlaceCreate.cs" />
+    <Compile Include="PlaceDelete.cs" />
+    <Compile Include="PlaceDetails.cs" />
+    <Compile Include="PlaceEdit.cs" />
+    <Compile Include="PlaceListItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
