@@ -13,6 +13,7 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.OAuth;
+using TravelBackend.Data;
 using TravelBackend.Web.Models;
 using TravelBackend.Web.Providers;
 using TravelBackend.Web.Results;

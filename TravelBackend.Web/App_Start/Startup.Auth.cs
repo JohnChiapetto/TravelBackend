@@ -10,6 +10,7 @@ using Microsoft.Owin.Security.OAuth;
 using Owin;
 using TravelBackend.Web.Providers;
 using TravelBackend.Web.Models;
+using TravelBackend.Data;
 
 namespace TravelBackend.Web
 {
