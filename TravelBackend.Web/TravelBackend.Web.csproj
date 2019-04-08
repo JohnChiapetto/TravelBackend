@@ -213,6 +213,7 @@
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\PlaceController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -300,6 +301,14 @@
     <ProjectReference Include="..\TravelBackend.Data\TravelBackend.Data.csproj">
       <Project>{8B5C6612-BD3C-48D9-8809-388336E7C4F1}</Project>
       <Name>TravelBackend.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TravelBackend.Models\TravelBackend.Models.csproj">
+      <Project>{ED5CBBFD-3DA1-4A5A-B286-17ABE731DAF8}</Project>
+      <Name>TravelBackend.Models</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TravelBackend.Services\TravelBackend.Services.csproj">
+      <Project>{82F9DB3C-1916-40E1-A613-A8C5779D530C}</Project>
+      <Name>TravelBackend.Services</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

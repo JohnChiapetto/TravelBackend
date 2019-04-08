@@ -31,5 +31,38 @@ namespace TravelBackend.Services
             );
             return Context.SaveChanges() == 1;
         }
+        public bool CreatePlace(PlaceCreate model,out Guid id)
+        {
+            var p = new Place
+            {
+                PlaceName = model.PlaceName,
+                PlaceDescription = model.PlaceDescription,
+                PlaceImageUrl = model.PlaceImageUrl,
+                PlaceLocation = model.PlaceLocation,
+                SubmittedUTC = DateTimeOffset.Now,
+                SubmittingUserId = _userId
+            };
+            Context.Places.Add(p);
+            id = p.PlaceId;
+            return Context.SaveChanges() == 1;
+        }
+
+        public bool UpdatePlace(PlaceEdit model)
+        {
+            var ent = GetPlaceById(model.PlaceId);
+            ent.PlaceName = model.PlaceName;
+            ent.PlaceDescription = model.PlaceDescription;
+            ent.PlaceImageUrl = model.PlaceImageUrl;
+            ent.PlaceLocation = model.PlaceLocation;
+            ent.ModifiedUTC = DateTimeOffset.Now;
+            ent.ModifyingUserId = _userId;
+            return Context.SaveChanges() != 0;
+        }
+
+        public bool DeletePlace(Guid id)
+        {
+            Context.Places.Remove(GetPlaceById(id));
+            return Math.Abs(Context.SaveChanges()) == 1;
+        }
     }
 }
