@@ -4,6 +4,8 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using TravelBackend.Models;
+using TravelBackend.Services;
 
 namespace TravelBackend.Web.Controllers
 {

@@ -60,6 +60,11 @@
     <Compile Include="PlaceEdit.cs" />
     <Compile Include="PlaceListItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TagCreate.cs" />
+    <Compile Include="TagDelete.cs" />
+    <Compile Include="TagDetail.cs" />
+    <Compile Include="TagEdit.cs" />
+    <Compile Include="TagListItem.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
