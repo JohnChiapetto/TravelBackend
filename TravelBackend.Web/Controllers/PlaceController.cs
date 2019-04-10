@@ -42,6 +42,7 @@ namespace TravelBackend.Web.Controllers
         public IHttpActionResult Post(Guid id,PlaceEdit model)
         {
             if (!ModelState.IsValid) return InternalServerError(new Exception("Invalid Model"));
+            model.PlaceId = id;
             var svc = CreatePlaceService();
             return svc.UpdatePlace(model) ? (IHttpActionResult)Ok(new { success=true,message="Successfully updated place" }) : (IHttpActionResult)InternalServerError(new Exception("Error Updating Place")) ;
         }
