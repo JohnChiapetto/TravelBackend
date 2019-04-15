@@ -11,6 +11,7 @@ namespace TravelBackend.Services
     public class TagPlaceService : AbstractService
     {
         public TagPlaceService() : base() { }
+        public TagPlaceService(Guid id) : base(id) { }
 
         public TagPlace[] GetTagPlaces(Expression<Func<TagPlace,bool>> x) => Context.TagPlaces.Where(x).ToArray();
         public TagPlace GetSingleTagPlace(Expression<Func<TagPlace,bool>> x) => GetTagPlaces(x)[0];

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNet.Identity;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -11,7 +12,7 @@ namespace TravelBackend.Web.Controllers
 {
     public class TagController : ApiController
     {
-        private TagService CreateTagService() => new TagService();
+        private TagService CreateTagService() => new TagService(Guid.Parse(User.Identity.GetUserId()));
 
         //Get List
         public IHttpActionResult Get()

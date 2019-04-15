@@ -12,6 +12,7 @@ namespace TravelBackend.Services
     public class PlaceService : AbstractService
     {
         public PlaceService() : base() { }
+        public PlaceService(Guid id) : base(id) { }
 
         public Place GetPlaceById(Guid id) => GetSinglePlace(e => e.PlaceId == id);
         public Place GetSinglePlace(Expression<Func<Place,bool>> x) => GetPlaces(x)[0];

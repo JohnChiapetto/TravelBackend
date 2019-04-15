@@ -12,6 +12,7 @@ namespace TravelBackend.Services
     public class TagService : AbstractService
     {
         public TagService() : base() { }
+        public TagService(Guid id) : base(id) { }
 
         public Tag GetTagById(Guid id) => GetSingleTag(e => e.TagId == id);
         public Tag GetSingleTag(Expression<Func<Tag,bool>> x) => GetTags(x)[0];

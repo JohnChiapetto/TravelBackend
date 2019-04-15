@@ -13,23 +13,39 @@ namespace TravelBackend.Services
     public class TagRequestService : AbstractService
     {
         public TagRequestService() : base() { }
+        public TagRequestService(Guid uid) : base(uid) { }
 
         public TagRequest GetTagRequestById(Guid id) => GetSingleTagRequest(e => e.TagRequestId == id);
         public TagRequest GetSingleTagRequest(Expression<Func<TagRequest,bool>> x) => GetTagRequests(x)[0];
         public TagRequest[] GetTagRequests(Expression<Func<TagRequest, bool>> x) => Context.TagRequests.Where(x).ToArray();
         public bool CreateTagRequest(TagRequestCreate model)
         {
-            Context.TagRequests.Add(
-                new TagRequest
-                {
-                    TagRequestName = model.TagRequestName,
-                    TagRequestPlace = model.TagRequestPlace,
-                    TagRequestDate = DateTimeOffset.Now,
-                    TagRequestUserId = _userId
-
-                }
-            );
-            return Context.SaveChanges() == 1;
+            var ent = new TagRequest
+            {
+                TagRequestName = model.TagRequestName,
+                TagRequestPlace = model.TagRequestPlace,
+                TagRequestDate = DateTimeOffset.Now,
+                TagRequestUserId = _userId
+            };
+            var rsvc = CreateRoleService();
+            Context.TagRequests.Add(ent);
+            if (rsvc.IsUserInRole(_userId,Guid.Parse(rsvc.GetRole(e => e.Name == "Admin").Id)))
+            {
+                GrantTagRequest(ent.TagRequestId);
+            }
+            return Context.SaveChanges() != 0;
+        }
+        public bool GrantTagRequest(Guid id)
+        {
+            var model = GetTagRequestById(id);
+            var ent = new Tag
+            {
+                TagId = Guid.NewGuid(),
+                TagName = model.TagRequestName,
+            };
+            DeleteTagRequest(id);
+            Context.Tags.Add(ent);
+            return Context.SaveChanges() != 0;
         }
         public bool CreateTagRequest(TagRequestCreate model, out Guid id)
         {
