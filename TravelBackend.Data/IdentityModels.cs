@@ -29,6 +29,7 @@ namespace TravelBackend.Data
 
         public DbSet<Place> Places { get; set; }
         public DbSet<Tag> Tags { get; set; }
+        public DbSet<TagRequest> TagRequests { get; set; }
 
         public static ApplicationDbContext Create()
         {

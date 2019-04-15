@@ -79,6 +79,7 @@
     <Compile Include="Place.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tag.cs" />
+    <Compile Include="TagRequest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
