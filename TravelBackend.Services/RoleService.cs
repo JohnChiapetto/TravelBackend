@@ -8,6 +8,9 @@ using System.Text;
 using System.Threading.Tasks;
 using TravelBackend.Data;
 
+/***********************************************************************************************************
+ * ASK BEFORE CHANGING THIS FILE
+ ***********************************************************************************************************/
 namespace TravelBackend.Services
 {
     public class RoleService : AbstractService
@@ -24,12 +27,24 @@ namespace TravelBackend.Services
         {
             if (RoleManager == null) RoleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(Context));
             if (UserManager == null) UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(Context));
+            if (Context.Roles.Where(e => e.Name == "User").Count() < 1)
+            {
+                Guid id;
+                IEnumerable<string> errors;
+                if (!CreateRole("User",out id,out errors))
+                {
+                    throw new Exception("Some errors occured!");
+                }
+                Context.SaveChanges();
+            }
+            Context.SaveChanges();
+            foreach (var user in Context.Users)
+            {
+                if (user.Roles.Count < 1) new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(Context)).AddToRoleAsync(user.Id,"User");
+                Context.SaveChanges();
+            }
             if (Context.Roles.Where(e=>e.Name=="Admin").Count() < 1) {
                 IEnumerable<string> errors;
-                //if (!CreateUser(ADMIN_HARDCODED_EMAIL,ADMIN_HADRCODED_PASS,out errors))
-                //{
-                //    throw new Exception("Some errors occured!");
-                //}
                 var res = Task.Run(async () => { return await UserManager.CreateAsync(new ApplicationUser() { UserName = ADMIN_HARDCODED_EMAIL, Email=ADMIN_HARDCODED_EMAIL },ADMIN_HADRCODED_PASS); }).Result;
                 if (!res.Succeeded) {
                     errors = res.Errors;
@@ -45,6 +60,7 @@ namespace TravelBackend.Services
                 {
                     throw new Exception("Some errors occured!");
                 }
+                Context.SaveChanges();
             }
         }
 
@@ -94,7 +110,13 @@ namespace TravelBackend.Services
 
         public IdentityRole GetRoleById(Guid roleId) => GetRole(e => e.Id == roleId.ToString());
         public IdentityRole GetRoleOfUser(string uid) => GetRoleOfUser(Guid.Parse(uid));
-        public IdentityRole GetRoleOfUser(Guid userId) => GetRoleById(Guid.Parse(Context.Users.Where(e => e.Id == userId.ToString()).ToArray()[0].Roles.ToArray()[0].RoleId));
+        public IdentityRole GetRoleOfUser(Guid userId)
+        {
+            var user = Context.Users.Where(e => e.Id == userId.ToString()).ToArray()[0];
+            var roles = user.Roles.ToArray();
+            if (roles.Length < 1) return Context.Roles.Where(e => e.Name == "User").Single();
+            return GetRoleById(Guid.Parse(roles[0].RoleId));
+        }
         public ApplicationUser[] GetUsersInRole(Guid roleId) => Context.Users.Where(e => GetRoleOfUser(e.Id).Id == roleId.ToString()).ToArray();
         public bool IsUserInRole(Guid uid,Guid roleId) => Context.Users.Where(e => e.Id == uid.ToString()).Single().Roles.Where(e=>e.RoleId==roleId.ToString()).Count() > 0;
 
@@ -114,8 +136,9 @@ namespace TravelBackend.Services
         }
         public bool AssignRoleToUser(Guid roleId,Guid userId,out IEnumerable<string> errors)
         {
-            UserManager.RemoveFromRoles(userId.ToString(),GetRoleOfUser(userId).Id);
-            var res = UserManager.AddToRole(userId.ToString(),GetRoleById(roleId).ToString());
+            var idS = userId.ToString();
+            UserManager.RemoveFromRoles(idS,GetRoleOfUser(userId).Id);
+            var res = UserManager.AddToRole(idS,GetRoleById(roleId).Name);
             errors = res.Errors;
             return res.Succeeded;
         }

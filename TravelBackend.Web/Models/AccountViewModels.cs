@@ -31,6 +31,8 @@ namespace TravelBackend.Web.Models
 
         public bool HasRegistered { get; set; }
 
+        public bool IsAdmin { get; set; }
+
         public string LoginProvider { get; set; }
     }
 

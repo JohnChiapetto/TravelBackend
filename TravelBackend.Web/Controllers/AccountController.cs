@@ -14,6 +14,7 @@ using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.OAuth;
 using TravelBackend.Data;
+using TravelBackend.Services;
 using TravelBackend.Web.Models;
 using TravelBackend.Web.Providers;
 using TravelBackend.Web.Results;
@@ -58,9 +59,11 @@ namespace TravelBackend.Web.Controllers
         public UserInfoViewModel GetUserInfo()
         {
             ExternalLoginData externalLogin = ExternalLoginData.FromIdentity(User.Identity as ClaimsIdentity);
+            var svc = new RoleService();
 
             return new UserInfoViewModel
             {
+                IsAdmin = svc.GetRoleOfUser(Guid.Parse(User.Identity.GetUserId())).Name == "Admin",
                 Email = User.Identity.GetUserName(),
                 HasRegistered = externalLogin == null,
                 LoginProvider = externalLogin != null ? externalLogin.LoginProvider : null
