@@ -33,6 +33,7 @@ namespace TravelBackend.Services
         }
         public bool CreateTagRequest(TagRequestCreate model, out Guid id)
         {
+            var psvc = new PlaceService();
             var t = new TagRequest
             {
                 TagRequestName = model.TagRequestName,

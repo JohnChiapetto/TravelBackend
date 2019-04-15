@@ -16,11 +16,11 @@ namespace TravelBackend.Models
         [MaxLength(50, ErrorMessage = "Please limit the entry to 50 characters.")]
         public string TagRequestName { get; set; }
 
-        public string TagRequestUserId { get; set; }
+        public Guid TagRequestUserId { get; set; }
 
         public DateTimeOffset TagRequestDate { get; set; }
 
-        public string TagRequestPlace { get; set; }
+        public Guid TagRequestPlace { get; set; }
 
     }
 }

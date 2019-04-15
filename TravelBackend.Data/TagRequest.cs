@@ -15,10 +15,14 @@ namespace TravelBackend.Data
         [Required]
         [MaxLength(50, ErrorMessage = "Please limit the entry to 50 characters.")]
         public string TagRequestName { get; set; }
-        public string TagRequestPlace { get; set; }
 
+        [Required]
+        public Guid TagRequestPlace { get; set; }
+
+        [Required]
         public DateTimeOffset TagRequestDate { get; set; }
 
+        [Required]
         public Guid TagRequestUserId { get; set; }
 
         public TagRequest()
