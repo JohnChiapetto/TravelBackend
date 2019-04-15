@@ -9,8 +9,6 @@ namespace TravelBackend.Models
 {
     public class TagRequestCreate
     {
-        [Key]
-        public Guid TagRequestId { get; set; }
 
         [Required]
         [MaxLength(50, ErrorMessage = "Please limit the entry to 50 characters.")]
