@@ -57,6 +57,7 @@
     <Compile Include="AbstractService.cs" />
     <Compile Include="PlaceService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TagRequestService.cs" />
     <Compile Include="RoleService.cs" />
     <Compile Include="TagPlaceService.cs" />
     <Compile Include="TagService.cs" />
