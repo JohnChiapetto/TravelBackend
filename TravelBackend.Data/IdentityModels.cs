@@ -1,4 +1,5 @@
-﻿using System.Data.Entity;
+﻿using System.Collections.Generic;
+using System.Data.Entity;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
@@ -29,6 +30,7 @@ namespace TravelBackend.Data
 
         public DbSet<Place> Places { get; set; }
         public DbSet<Tag> Tags { get; set; }
+        public DbSet<TagPlace> TagPlaces { get; set; }
 
         public static ApplicationDbContext Create()
         {

@@ -65,6 +65,8 @@
     <Compile Include="TagDetail.cs" />
     <Compile Include="TagEdit.cs" />
     <Compile Include="TagListItem.cs" />
+    <Compile Include="TagPlaceCreate.cs" />
+    <Compile Include="TagPlaceDelete.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
