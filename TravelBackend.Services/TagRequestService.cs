@@ -47,6 +47,7 @@ namespace TravelBackend.Services
             Context.Tags.Add(ent);
             return Context.SaveChanges() != 0;
         }
+        public bool DenyTagRequest(Guid id) => DeleteTagRequest(id);
         public bool CreateTagRequest(TagRequestCreate model, out Guid id)
         {
             var psvc = new PlaceService();
