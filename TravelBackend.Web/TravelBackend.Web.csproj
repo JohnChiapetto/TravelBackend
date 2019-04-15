@@ -216,6 +216,7 @@
     <Compile Include="Controllers\PlaceController.cs" />
     <Compile Include="Controllers\TagController.cs" />
     <Compile Include="Controllers\TagRequestController.cs" />
+    <Compile Include="Controllers\TagPlaceController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>

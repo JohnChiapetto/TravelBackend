@@ -42,6 +42,7 @@ namespace TravelBackend.Web.Controllers
         public IHttpActionResult Post(Guid id, TagEdit model)
         {
             if (!ModelState.IsValid) return InternalServerError(new Exception("Invalid Model"));
+            model.TagId = id;
             var svc = CreateTagService();
             return svc.UpdateTag(model) ? (IHttpActionResult)Ok(new { success = true, message = "Successfully updated place" }) : (IHttpActionResult)InternalServerError(new Exception("Error Updating Tag"));
         }

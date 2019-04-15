@@ -69,6 +69,8 @@
     <Compile Include="TagRequestDelete.cs" />
     <Compile Include="TagRequestEdit.cs" />
     <Compile Include="TagRequestListItem.cs" />
+    <Compile Include="TagPlaceCreate.cs" />
+    <Compile Include="TagPlaceDelete.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
