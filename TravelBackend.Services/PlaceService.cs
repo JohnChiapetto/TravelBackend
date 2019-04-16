@@ -9,11 +9,29 @@ using TravelBackend.Models;
 
 namespace TravelBackend.Services
 {
+    public static class ArrayExt
+    {
+        public static T[] Map<F, T>(this F[] arr,Func<F,T> f)
+        {
+            var oarr = new T[arr.Length];
+            for (int i = 0; i < arr.Length; i++) oarr[i] = f(arr[i]);
+            return oarr;
+        }
+    }
+
     public class PlaceService : AbstractService
     {
         public PlaceService() : base() { }
         public PlaceService(Guid id) : base(id) { }
 
+        public PlaceListItem ListItemOf(Place p)
+        {
+            var item = new PlaceListItem(p);
+            var lsvc = new TagPlaceService(_userId);
+            item.Tags = lsvc.GetTagsOfPlace(item.PlaceId).Map(e => new TagListItem { TagId = e.TagId,TagName = e.TagName });
+            return item;
+        }
+        public PlaceListItem[] GetPlaceListItems(Expression<Func<Place,bool>> x) => GetPlaces(x).Map(e => ListItemOf(e));
         public Place GetPlaceById(Guid id) => GetSinglePlace(e => e.PlaceId == id);
         public Place GetSinglePlace(Expression<Func<Place,bool>> x) => GetPlaces(x)[0];
         public Place[] GetPlaces(Expression<Func<Place,bool>> x) => Context.Places.Where(x).ToArray();
@@ -43,18 +61,26 @@ namespace TravelBackend.Services
                 SubmittedUTC = DateTimeOffset.Now,
                 SubmittingUserId = _userId
             };
+            var lsvc = new TagPlaceService(_userId);
             Context.Places.Add(p);
             id = p.PlaceId;
+            foreach (var t in model.Tags)
+            {
+                lsvc.Link(id,t.TagId);
+            }
             return Context.SaveChanges() == 1;
         }
 
         public bool UpdatePlace(PlaceEdit model)
         {
+            var lsvc = new TagPlaceService(_userId);
             var ent = GetPlaceById(model.PlaceId);
             ent.PlaceName = model.PlaceName;
             ent.PlaceDescription = model.PlaceDescription;
             ent.PlaceImageUrl = model.PlaceImageUrl;
             ent.PlaceLocation = model.PlaceLocation;
+            lsvc.UnLinkAllFromPlace(ent.PlaceId);
+            foreach (var tag in model.Tags) lsvc.Link(ent.PlaceId,tag.TagId);
             ent.ModifiedUTC = DateTimeOffset.Now;
             ent.ModifyingUserId = _userId;
             return Context.SaveChanges() != 0;

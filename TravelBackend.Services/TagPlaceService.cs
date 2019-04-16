@@ -50,5 +50,13 @@ namespace TravelBackend.Services
             return Context.SaveChanges() != 0;
         }
         public bool AreLinked(Guid placeId,Guid tagId) => GetTagPlaces(e => e.PlaceId == placeId && e.TagId == tagId).Length > 0;
+
+        public void UnLinkAllFromPlace(Guid placeId)
+        {
+            foreach (var tag in GetTagsOfPlace(placeId))
+            {
+                UnLink(placeId,tag.TagId);
+            }
+        }
     }
 }

@@ -23,6 +23,8 @@ namespace TravelBackend.Models
 
         public string PlaceImageUrl { get; set; } = null;
 
+        public TagListItem[] Tags { get; set; }
+
         [Required]
         public DateTimeOffset SubmittedUTC { get; set; }
         public DateTimeOffset? ModifiedUTC { get; set; } = null;

@@ -24,6 +24,8 @@ namespace TravelBackend.Models
         [MaxLength(32000)]
         public string PlaceDescription { get; set; }
 
+        public TagListItem[] Tags { get; set; }
+
         public string PlaceImageUrl { get; set; }
     }
 }
