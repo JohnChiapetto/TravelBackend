@@ -51,5 +51,4 @@ namespace TravelBackend.Services
             return Math.Abs(Context.SaveChanges()) == 1;
         }
     }
-
 }

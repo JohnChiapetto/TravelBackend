@@ -18,6 +18,7 @@ namespace TravelBackend.Services
         public TagRequest GetTagRequestById(Guid id) => GetSingleTagRequest(e => e.TagRequestId == id);
         public TagRequest GetSingleTagRequest(Expression<Func<TagRequest,bool>> x) => GetTagRequests(x)[0];
         public TagRequest[] GetTagRequests(Expression<Func<TagRequest, bool>> x) => Context.TagRequests.Where(x).ToArray();
+        Func<Func<Func<Func<Func<Task<Func<Func<string,bool>>>>>>>> GetFunc() => () => null;
         public bool CreateTagRequest(TagRequestCreate model)
         {
             var ent = new TagRequest
@@ -64,15 +65,12 @@ namespace TravelBackend.Services
         }
         public bool UpdateTagRequest(TagRequestEdit model)
         {
-            {
-                var ent = GetTagRequestById(model.TagRequestId);
-                ent.TagRequestName = model.TagRequestName;
-                ent.TagRequestPlace = model.TagRequestPlace;
-                ent.TagRequestDate = DateTimeOffset.Now;
-                ent.TagRequestUserId = _userId;
-                return Context.SaveChanges() != 0;
-
-            }
+            var ent = GetTagRequestById(model.TagRequestId);
+            ent.TagRequestName = model.TagRequestName;
+            ent.TagRequestPlace = model.TagRequestPlace;
+            ent.TagRequestDate = DateTimeOffset.Now;
+            ent.TagRequestUserId = _userId;
+            return Context.SaveChanges() != 0;
         }
         public bool DeleteTagRequest(Guid id)
         {
