@@ -1,4 +1,5 @@
-﻿ using System;
+﻿using Microsoft.AspNet.Identity;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -11,7 +12,7 @@ namespace TravelBackend.Web.Controllers
 {
     public class TagRequestController : ApiController
     {
-        private TagRequestService CreateTagRequestService() => new TagRequestService();
+        private TagRequestService CreateTagRequestService() => new TagRequestService(Guid.Parse(User.Identity.GetUserId()));
 
         //Get List
         public IHttpActionResult Get()
@@ -29,7 +30,7 @@ namespace TravelBackend.Web.Controllers
             return Ok(model);
         }
 
-        // Create
+        // Create 
         public IHttpActionResult Post(TagRequestCreate model)
         {
             if (!ModelState.IsValid) return InternalServerError(new Exception("Invalid Model"));

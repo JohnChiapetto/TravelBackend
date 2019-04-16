@@ -76,5 +76,11 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\TravelBackend.Data\TravelBackend.Data.csproj">
+      <Project>{8B5C6612-BD3C-48D9-8809-388336E7C4F1}</Project>
+      <Name>TravelBackend.Data</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

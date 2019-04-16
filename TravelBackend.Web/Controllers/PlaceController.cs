@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNet.Identity;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -9,23 +10,54 @@ using TravelBackend.Services;
 
 namespace TravelBackend.Web.Controllers
 {
+    public static class ApiControllerExt
+    {
+        public static Guid GetUserId(this ApiController c) => Guid.Parse(c.User.Identity.GetUserId());
+    }
+
     public class PlaceController : ApiController
     {
-        private PlaceService CreatePlaceService() => new PlaceService();
+        private PlaceService CreatePlaceService() => new PlaceService(Guid.Parse(User.Identity.GetUserId()));
+        private TagPlaceService CreateLinkService() => new TagPlaceService(((ApiController)this).GetUserId());
 
         // Get List
         public IHttpActionResult Get()
         {
             var svc = CreatePlaceService();
-            var model = svc.GetPlaces(e => true);
+            var model = svc.GetPlaceListItems(e => true);
             return Ok(model);
         }
 
         // Get By ID
         public IHttpActionResult Get(Guid id)
         {
+            var tsvc = CreateLinkService();
             var svc = CreatePlaceService();
-            var model = svc.GetSinglePlace(e => e.PlaceId == id);
+            var ent = svc.GetSinglePlace(e => e.PlaceId == id);
+            var tagz = tsvc.GetTagsOfPlace(ent.PlaceId);
+            var tags = new List<TagListItem>();
+            foreach (var tag in tagz)
+            {
+                var tli = new TagListItem
+                {
+                    TagId = tag.TagId,
+                    TagName = tag.TagName
+                };
+                tags.Add(tli);
+            }
+            var model = new PlaceDetails
+            {
+                PlaceId = ent.PlaceId,
+                PlaceDescription = ent.PlaceDescription,
+                PlaceImageUrl = ent.PlaceImageUrl,
+                PlaceLocation = ent.PlaceLocation,
+                PlaceName = ent.PlaceName,
+                ModifiedUTC = ent.ModifiedUTC,
+                ModifyingUserId = ent.ModifyingUserId,
+                SubmittedUTC = ent.SubmittedUTC,
+                SubmittingUserId = ent.SubmittingUserId,
+                Tags = tags.ToArray()
+            };
             return Ok(model);
         }
 

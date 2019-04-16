@@ -11,6 +11,7 @@ namespace TravelBackend.Services
     public class TagPlaceService : AbstractService
     {
         public TagPlaceService() : base() { }
+        public TagPlaceService(Guid id) : base(id) { }
 
         public TagPlace[] GetTagPlaces(Expression<Func<TagPlace,bool>> x) => Context.TagPlaces.Where(x).ToArray();
         public TagPlace GetSingleTagPlace(Expression<Func<TagPlace,bool>> x) => GetTagPlaces(x)[0];
@@ -49,5 +50,13 @@ namespace TravelBackend.Services
             return Context.SaveChanges() != 0;
         }
         public bool AreLinked(Guid placeId,Guid tagId) => GetTagPlaces(e => e.PlaceId == placeId && e.TagId == tagId).Length > 0;
+
+        public void UnLinkAllFromPlace(Guid placeId)
+        {
+            foreach (var tag in GetTagsOfPlace(placeId))
+            {
+                UnLink(placeId,tag.TagId);
+            }
+        }
     }
 }

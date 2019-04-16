@@ -18,5 +18,7 @@ namespace TravelBackend.Services
             this._userId = uid;
             if (Context == null) Context = new ApplicationDbContext();
         }
+
+        public RoleService CreateRoleService() => new RoleService(this._userId);
     }
 }

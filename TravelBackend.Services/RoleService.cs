@@ -23,7 +23,8 @@ namespace TravelBackend.Services
         private static IdentityRole RoleAdmin = new IdentityRole("Admin");
         private static ApplicationUser UserAdmin;
 
-        public RoleService() : base()
+        public RoleService() : base(new Guid()) { }
+        public RoleService(Guid uid) : base(uid)
         {
             if (RoleManager == null) RoleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(Context));
             if (UserManager == null) UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(Context));
