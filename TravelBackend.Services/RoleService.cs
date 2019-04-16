@@ -23,7 +23,7 @@ namespace TravelBackend.Services
         private static IdentityRole RoleAdmin = new IdentityRole("Admin");
         private static ApplicationUser UserAdmin;
 
-        public RoleService() : base(new Guid()) { }
+        public RoleService() : this(new Guid()) { }
         public RoleService(Guid uid) : base(uid)
         {
             if (RoleManager == null) RoleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(Context));
@@ -41,7 +41,10 @@ namespace TravelBackend.Services
             Context.SaveChanges();
             foreach (var user in Context.Users)
             {
-                if (user.Roles.Count < 1) new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(Context)).AddToRoleAsync(user.Id,"User");
+                if (user.Roles.Count < 1)
+                {
+                    UserManager.AddToRoleAsync(user.Id, "User");
+                }
                 Context.SaveChanges();
             }
             if (Context.Roles.Where(e=>e.Name=="Admin").Count() < 1) {
