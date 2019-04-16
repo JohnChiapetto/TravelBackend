@@ -10,7 +10,7 @@ using TravelBackend.Services;
 
 namespace TravelBackend.Web.Controllers
 {
-    public class TagRequestController : ApiController
+    public class TagRequestController : AbstractController
     {
         private TagRequestService CreateTagRequestService() => new TagRequestService(Guid.Parse(User.Identity.GetUserId()));
 
@@ -33,6 +33,7 @@ namespace TravelBackend.Web.Controllers
         // Create 
         public IHttpActionResult Post(TagRequestCreate model)
         {
+            if (!User.Identity.IsAuthenticated) return StatusCode(HttpStatusCode.Forbidden);
             if (!ModelState.IsValid) return InternalServerError(new Exception("Invalid Model"));
             var svc = CreateTagRequestService();
             Guid newId;
@@ -42,6 +43,7 @@ namespace TravelBackend.Web.Controllers
         //Edit
         public IHttpActionResult Post(Guid id, TagRequestEdit model)
         {
+            if (!User.Identity.IsAuthenticated) return StatusCode(HttpStatusCode.Forbidden);
             if (!ModelState.IsValid) return InternalServerError(new Exception("Invalid Model"));
             var svc = CreateTagRequestService();
             model.TagRequestId = id;
@@ -51,6 +53,7 @@ namespace TravelBackend.Web.Controllers
         //Delete
         public IHttpActionResult Delete(Guid id)
         {
+            if (!User.Identity.IsAuthenticated && IsUserAdmin) return StatusCode(HttpStatusCode.Forbidden);
             var svc = CreateTagRequestService();
             return svc.DeleteTagRequest(id) ? (IHttpActionResult)Ok(new { success = true, message = "Successfully deleted Tag Request" + id + "!" }) : (IHttpActionResult)InternalServerError(new Exception("Error Deleting Tag Request"));
         }

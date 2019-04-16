@@ -10,7 +10,7 @@ using TravelBackend.Services;
 
 namespace TravelBackend.Web.Controllers
 {
-    public class TagPlaceController : ApiController
+    public class TagPlaceController : AbstractController
     {
         private TagPlaceService CreateTagePlaceService() => new TagPlaceService(Guid.Parse(User.Identity.GetUserId()));
 
@@ -22,6 +22,7 @@ namespace TravelBackend.Web.Controllers
         }
         public IHttpActionResult Post(TagPlaceCreate model)
         {
+            if (!User.Identity.IsAuthenticated) return StatusCode(HttpStatusCode.Forbidden);
             if (!ModelState.IsValid) return InternalServerError(new Exception("Invalid Model!"));
             if (CreateTagePlaceService().Link(model.PlaceId,model.TagId)) {
                 return Ok(new { success=true,message="Successfully linked place to tag!" });
@@ -29,6 +30,7 @@ namespace TravelBackend.Web.Controllers
             return InternalServerError(new Exception("Error saving link"));
         }
         public IHttpActionResult Delete(TagPlaceDelete model) {
+            if (!User.Identity.IsAuthenticated) return StatusCode(HttpStatusCode.Forbidden);
             if (!ModelState.IsValid) return InternalServerError(new Exception("Invalid Model!"));
             if (CreateTagePlaceService().UnLink(model.PlaceId,model.TagId))
             {

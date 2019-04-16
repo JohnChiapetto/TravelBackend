@@ -4,21 +4,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Web;
 using System.Web.Http;
 using TravelBackend.Models;
 using TravelBackend.Services;
 
 namespace TravelBackend.Web.Controllers
 {
-    public static class ApiControllerExt
+    public class PlaceController : AbstractController
     {
-        public static Guid GetUserId(this ApiController c) => Guid.Parse(c.User.Identity.GetUserId());
-    }
-
-    public class PlaceController : ApiController
-    {
-        private PlaceService CreatePlaceService() => new PlaceService(Guid.Parse(User.Identity.GetUserId()));
-        private TagPlaceService CreateLinkService() => new TagPlaceService(((ApiController)this).GetUserId());
+        private PlaceService CreatePlaceService() => new PlaceService(GetUserId());
+        private TagPlaceService CreateLinkService() => new TagPlaceService(GetUserId());
 
         // Get List
         public IHttpActionResult Get()
@@ -64,6 +60,7 @@ namespace TravelBackend.Web.Controllers
         // Create
         public IHttpActionResult Post(PlaceCreate model)
         {
+            if (!User.Identity.IsAuthenticated) return this.StatusCode(HttpStatusCode.Forbidden);
             if (!ModelState.IsValid) return InternalServerError(new Exception("Invalid Model"));
             var svc = CreatePlaceService();
             Guid newId;
@@ -73,6 +70,7 @@ namespace TravelBackend.Web.Controllers
         // Edit
         public IHttpActionResult Post(Guid id,PlaceEdit model)
         {
+            if (!User.Identity.IsAuthenticated) return this.StatusCode(HttpStatusCode.Forbidden);
             if (!ModelState.IsValid) return InternalServerError(new Exception("Invalid Model"));
             model.PlaceId = id;
             var svc = CreatePlaceService();
@@ -82,6 +80,7 @@ namespace TravelBackend.Web.Controllers
         // Delete
         public IHttpActionResult Delete(Guid id)
         {
+            if (!User.Identity.IsAuthenticated) return this.StatusCode(HttpStatusCode.Forbidden);
             var svc = CreatePlaceService();
             return svc.DeletePlace(id) ? (IHttpActionResult)Ok(new { success = true,message = "Successfully deleted place " + id + "!" }) : (IHttpActionResult)InternalServerError(new Exception("Error Deleting Place"));
         }
