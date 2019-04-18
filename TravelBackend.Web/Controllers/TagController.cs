@@ -5,11 +5,29 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using TravelBackend.Data;
 using TravelBackend.Models;
 using TravelBackend.Services;
 
 namespace TravelBackend.Web.Controllers
 {
+    class TagAlphaSorter : IComparer<Tag>
+    {
+        public int Compare(Tag x, Tag y)
+        {
+            return x.TagName.CompareTo(y.TagName);
+        }
+    }
+
+    static class ListExt
+    {
+        public static List<E> Sorted<E>(this List<E> list, IComparer<E> c)
+        {
+            list.Sort(c);
+            return list;
+        }
+    }
+
     public class TagController : AbstractController
     {
         private TagService CreateTagService() => new TagService(GetUserId());
@@ -18,7 +36,7 @@ namespace TravelBackend.Web.Controllers
         public IHttpActionResult Get()
         {
             var svc = CreateTagService();
-            var model = svc.GetTags(e => true);
+            var model = svc.GetTags(e => true).ToList().Sorted(new TagAlphaSorter());
             return Ok(model);
         }
 
