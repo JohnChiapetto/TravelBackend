@@ -24,6 +24,33 @@ namespace TravelBackend.Services
             foreach (var g in k) places.Add(psvc.GetPlaceById(g.PlaceId));
             return places.ToArray();
         }
+        private bool Check(Guid inId, Guid[] tagIds) {
+            foreach (var t in tagIds) if (t == inId) return true;
+            return false;
+        }
+        public Place[] GetPlacesWithTags(Guid[] tagIds)
+        {
+            var psvc = new PlaceService(_userId);
+            List<TagPlace> tps = new List<TagPlace>();
+            foreach (var tp in GetTagPlaces(e => true))
+            {
+                if (Check(tp.TagId, tagIds)) tps.Add(tp);
+            }
+            var res = tps.ToArray().Map(e=>psvc.GetPlaceById(e.PlaceId));
+            List<int> ints = new List<int>();
+            int n = 0;
+            foreach (var r in res) {
+                if (res.Count(e => e.PlaceId == r.PlaceId) > 1) ints.Add(n);
+                n++;
+            }
+            var k = new Place[res.Length - ints.Count];
+            int j = 0;
+            for (int i = 0; i < res.Length; i++) {
+                if (ints.Contains(i)) continue;
+                k[j++] = res[i];
+            }
+            return k;
+        }
         public Tag[] GetTagsOfPlace(Guid placeId)
         {
             var p = GetTagPlaces(e => e.PlaceId == placeId);
