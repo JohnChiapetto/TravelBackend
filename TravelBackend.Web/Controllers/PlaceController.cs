@@ -57,6 +57,13 @@ namespace TravelBackend.Web.Controllers
             return Ok(model);
         }
 
+        public IHttpActionResult Put(Guid[] tagIds) {
+            var lsvc = new TagPlaceService(GetUserId());
+            var m = lsvc.GetPlacesWithTags(tagIds);
+            var psvc = new PlaceService(GetUserId());
+            return Ok(m.Map(e=>psvc.ListItemOf(e)));
+        }
+
         // Create
         public IHttpActionResult Post(PlaceCreate model)
         {

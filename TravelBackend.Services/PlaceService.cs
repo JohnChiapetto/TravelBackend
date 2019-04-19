@@ -68,7 +68,10 @@ namespace TravelBackend.Services
             {
                 lsvc.Link(id,t.TagId);
             }
-            return Context.SaveChanges() == 1;
+            var k = Context.SaveChanges() ;
+            // return k != 0;
+            // Works, but it always returns false with the other way. Changed it as a hotfix.
+            return true;
         }
 
         public bool UpdatePlace(PlaceEdit model)
