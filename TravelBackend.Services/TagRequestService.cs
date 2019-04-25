@@ -44,6 +44,9 @@ namespace TravelBackend.Services
                 TagId = Guid.NewGuid(),
                 TagName = model.TagRequestName,
             };
+            Context.SaveChanges();
+            var lsvc = new TagPlaceService(_userId);
+            lsvc.Link(model.TagRequestPlace, ent.TagId);
             DeleteTagRequest(id);
             Context.Tags.Add(ent);
             return Context.SaveChanges() != 0;

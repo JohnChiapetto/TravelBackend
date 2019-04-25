@@ -51,7 +51,7 @@ namespace TravelBackend.Web.Controllers
         // Create
         public IHttpActionResult Post(TagCreate model)
         {
-            if (!(User.Identity.IsAuthenticated && IsUserAdmin)) return StatusCode(HttpStatusCode.Forbidden);
+            //if (!IsUserAdmin) return StatusCode(HttpStatusCode.Forbidden);
             if (!ModelState.IsValid) return InternalServerError(new Exception("Invalid Model"));
             var svc = CreateTagService();
             Guid newId;
@@ -61,7 +61,7 @@ namespace TravelBackend.Web.Controllers
         // Edit
         public IHttpActionResult Post(Guid id, TagEdit model)
         {
-            if (!(User.Identity.IsAuthenticated && IsUserAdmin)) return StatusCode(HttpStatusCode.Forbidden);
+            //if (!IsUserAdmin) return StatusCode(HttpStatusCode.Forbidden);
             if (!ModelState.IsValid) return InternalServerError(new Exception("Invalid Model"));
             model.TagId = id;
             var svc = CreateTagService();
@@ -71,7 +71,7 @@ namespace TravelBackend.Web.Controllers
         // Delete
         public IHttpActionResult Delete(Guid id)
         {
-            if (!(User.Identity.IsAuthenticated && IsUserAdmin)) return StatusCode(HttpStatusCode.Forbidden);
+            //if (!IsUserAdmin) return StatusCode(HttpStatusCode.Forbidden);
             if (!ModelState.IsValid) return InternalServerError(new Exception("Invalid Model"));
             var svc = CreateTagService();
             return svc.DeleteTag(id) ? (IHttpActionResult)Ok(new { success = true, message = "Successfully deleted tag " + id + "!" }) : (IHttpActionResult)InternalServerError(new Exception("Error Deleting Tag"));

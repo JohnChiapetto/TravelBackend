@@ -11,6 +11,29 @@ using TravelBackend.Services;
 
 namespace TravelBackend.Web.Controllers
 {
+    public class AMap : Dictionary<string, dynamic>
+    {
+        public new dynamic this[string key]
+        {
+            get => base[key];
+            set
+            {
+                if (ContainsKey(key)) base[key] = value;
+                else Add(key, value);
+            }
+        }
+
+        public AMap(object o)
+        {
+            foreach (var prop in o.GetType().GetProperties())
+            {
+                this[prop.Name] = prop.GetValue(o);
+            }
+        }
+
+        // public static implicit operator AMap(object o) => new AMap(o);
+    }
+
     public class PlaceController : AbstractController
     {
         private PlaceService CreatePlaceService() => new PlaceService(GetUserId());
@@ -57,39 +80,69 @@ namespace TravelBackend.Web.Controllers
             return Ok(model);
         }
 
-        public IHttpActionResult Put(Guid[] tagIds) {
-            var lsvc = new TagPlaceService(GetUserId());
-            var m = lsvc.GetPlacesWithTags(tagIds);
-            var psvc = new PlaceService(GetUserId());
-            return Ok(m.Map(e=>psvc.ListItemOf(e)));
+        public IHttpActionResult Put(TagListItem item)
+        {
+            var res = CreatePlaceService().GetPlacesWithTag(item.TagId);
+            return Ok(res);
         }
+        public IHttpActionResult Patch(Guid tagId)
+        {
+            var res = new TagPlaceService(GetUserId()).GetPlacesWithTag(tagId);
+            return Ok(res);
+        }
+        //public IHttpActionResult Put(Guid[] tagIds) {
+        //    var lsvc = new TagPlaceService(GetUserId());
+        //    var m = lsvc.GetPlacesWithTags(tagIds);
+        //    var psvc = new PlaceService(GetUserId());
+        //    return Ok(m.Map(e=>psvc.ListItemOf(e)));
+        //}
 
         // Create
         public IHttpActionResult Post(PlaceCreate model)
         {
-            if (!User.Identity.IsAuthenticated) return this.StatusCode(HttpStatusCode.Forbidden);
-            if (!ModelState.IsValid) return InternalServerError(new Exception("Invalid Model"));
+            //if (!IsUserSignedIn) return this.StatusCode(HttpStatusCode.Forbidden);
+            //if (!ModelState.IsValid) return InternalServerError(new Exception("Invalid Model"));
             var svc = CreatePlaceService();
             Guid newId;
-            return svc.CreatePlace(model,out newId) ? (IHttpActionResult)Ok(new { success = true,message = "Successfully created place \"" + model.PlaceName + "\" ("+newId+")" }) : (IHttpActionResult)InternalServerError(new Exception("Error Creating Place"));
+            if (svc.CreatePlace(model, out newId))
+            {
+                return Ok(new { success = true, message = "Successfully created place \"" + model.PlaceName + "\" (" + newId + ")" });
+            }
+            return InternalServerError(new Exception("Error Creating Place"));
         }
 
         // Edit
         public IHttpActionResult Post(Guid id,PlaceEdit model)
         {
-            if (!User.Identity.IsAuthenticated) return this.StatusCode(HttpStatusCode.Forbidden);
+            //if (!IsUserSignedIn) return this.StatusCode(HttpStatusCode.Forbidden);
             if (!ModelState.IsValid) return InternalServerError(new Exception("Invalid Model"));
             model.PlaceId = id;
             var svc = CreatePlaceService();
-            return svc.UpdatePlace(model) ? (IHttpActionResult)Ok(new { success=true,message="Successfully updated place" }) : (IHttpActionResult)InternalServerError(new Exception("Error Updating Place")) ;
+            if (svc.UpdatePlace(model))
+            {
+                var modelx = new {
+                    success = true,
+                    message = "Successfully updated place"
+                };
+                return Ok(modelx);
+            }
+            return InternalServerError(new Exception("Error Updating Place")) ;
         }
 
         // Delete
         public IHttpActionResult Delete(Guid id)
         {
-            if (!User.Identity.IsAuthenticated) return this.StatusCode(HttpStatusCode.Forbidden);
+            //if (!IsUserSignedIn) return this.StatusCode(HttpStatusCode.Forbidden);
             var svc = CreatePlaceService();
-            return svc.DeletePlace(id) ? (IHttpActionResult)Ok(new { success = true,message = "Successfully deleted place " + id + "!" }) : (IHttpActionResult)InternalServerError(new Exception("Error Deleting Place"));
+            if (svc.DeletePlace(id))
+            {
+                var model = new {
+                    success = true,
+                    message = "Successfully deleted place " + id + "!"
+                };
+                return Ok(model);
+            }
+            return InternalServerError(new Exception("Error Deleting Place"));
         }
     }
 }

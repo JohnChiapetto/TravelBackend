@@ -50,6 +50,16 @@ namespace TravelBackend.Services
             );
             return Context.SaveChanges() == 1;
         }
+        public Place[] GetPlacesWithTag(Guid tagId)
+        {
+            var lsvc = new TagPlaceService(_userId);
+            List<Place> p = new List<Place>();
+            foreach (var place in Context.Places.ToArray())
+            {
+                if (lsvc.AreLinked(place.PlaceId, tagId)) p.Add(place);
+            }
+            return p.ToArray();
+        }
         public bool CreatePlace(PlaceCreate model,out Guid id)
         {
             var p = new Place
@@ -66,6 +76,7 @@ namespace TravelBackend.Services
             id = p.PlaceId;
             foreach (var t in model.Tags)
             {
+                if (t.TagId.ToString() == new Guid().ToString()) continue;
                 lsvc.Link(id,t.TagId);
             }
             var k = Context.SaveChanges() ;

@@ -15,10 +15,13 @@ namespace TravelBackend.Web.Controllers
         {
             get
             {
+                if (!IsUserSignedIn) return false;
                 var svc = new RoleService(GetUserId());
                 var rid = Guid.Parse(svc.GetRole(e => e.Name == "Admin").Id);
                 return svc.IsUserInRole(GetUserId(),rid);
             }
         }
+        protected bool IsUserSignedIn => User.Identity.IsAuthenticated;
+        protected bool IsUserAdminOr(bool b) => b || IsUserAdmin;
     }
 }

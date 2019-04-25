@@ -30,10 +30,17 @@ namespace TravelBackend.Web.Controllers
             return Ok(model);
         }
 
+        public IHttpActionResult Put(Guid id)
+        {
+            var svc = CreateTagRequestService();
+            if (svc.GrantTagRequest(id)) return Ok(new { success = true });
+            return BadRequest();
+        }
+
         // Create 
         public IHttpActionResult Post(TagRequestCreate model)
         {
-            if (!User.Identity.IsAuthenticated) return StatusCode(HttpStatusCode.Forbidden);
+            //if (!User.Identity.IsAuthenticated) return StatusCode(HttpStatusCode.Forbidden);
             if (!ModelState.IsValid) return InternalServerError(new Exception("Invalid Model"));
             var svc = CreateTagRequestService();
             Guid newId;
@@ -43,7 +50,7 @@ namespace TravelBackend.Web.Controllers
         //Edit
         public IHttpActionResult Post(Guid id, TagRequestEdit model)
         {
-            if (!User.Identity.IsAuthenticated) return StatusCode(HttpStatusCode.Forbidden);
+            //if (!User.Identity.IsAuthenticated) return StatusCode(HttpStatusCode.Forbidden);
             if (!ModelState.IsValid) return InternalServerError(new Exception("Invalid Model"));
             var svc = CreateTagRequestService();
             model.TagRequestId = id;
@@ -53,7 +60,7 @@ namespace TravelBackend.Web.Controllers
         //Delete
         public IHttpActionResult Delete(Guid id)
         {
-            if (!User.Identity.IsAuthenticated && IsUserAdmin) return StatusCode(HttpStatusCode.Forbidden);
+            //if (!User.Identity.IsAuthenticated && IsUserAdmin) return StatusCode(HttpStatusCode.Forbidden);
             var svc = CreateTagRequestService();
             return svc.DeleteTagRequest(id) ? (IHttpActionResult)Ok(new { success = true, message = "Successfully deleted Tag Request" + id + "!" }) : (IHttpActionResult)InternalServerError(new Exception("Error Deleting Tag Request"));
         }
